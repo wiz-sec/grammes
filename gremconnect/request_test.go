@@ -29,7 +29,7 @@ import (
 )
 
 func TestPrepareRequest(t *testing.T) {
-	Convey("Given a query string, binding, and rebindings", t, func() {
+	Convey("Given a query string, binding, rebindings and custom requests header", t, func() {
 		query := ""
 		bindings := make(map[string]string)
 		rebindings := make(map[string]string)
@@ -47,6 +47,11 @@ func TestPrepareRequest(t *testing.T) {
 
 			Convey("And the error should be nil", func() {
 				So(err, ShouldBeNil)
+			})
+
+			Convey("And request should contain data", func() {
+				So(req.Args["someRequestHeader1"], ShouldEqual, "someRequestValue1")
+				So(req.Args["someRequestHeader2"], ShouldEqual, "someRequestValue2")
 			})
 		})
 	})
