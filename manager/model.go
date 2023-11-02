@@ -64,7 +64,7 @@ func unmarshalID(data [][]byte) (id interface{}, err error) {
 }
 
 // executor is the function type that is used when passing in executeRequest.
-type executor func(string, *time.Duration, map[string]string, map[string]string, *uuid.UUID) ([][]byte, error)
+type executor func(string, *time.Duration, map[string]string, map[string]string, *uuid.UUID, map[string]string) ([][]byte, error)
 
 // executor is the function type that is used when passing in ExecuteStringQuery.
 type stringExecutor func(string) ([][]byte, error)
