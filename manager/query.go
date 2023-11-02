@@ -21,12 +21,13 @@
 package manager
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/northwesternmutual/grammes/gremconnect"
 	"github.com/northwesternmutual/grammes/gremerror"
 	"github.com/northwesternmutual/grammes/logging"
 	"github.com/northwesternmutual/grammes/query"
-	"time"
 )
 
 // Query handles the querying actions to the server.
@@ -98,7 +99,7 @@ func (m *queryManager) ExecuteBoundStringQueryWithTimeout(query string, queryTim
 	return m.ExecuteBoundSessionQueryWithTimeout(query, queryTimeout, bindings, rebindings, nil)
 }
 
-func (m *queryManager) ExecuteBoundSessionQueryWithTimeout(query string, queryTimeout *time.Duration, bindings map[string]string, rebindings map[string]string, sessionId *uuid.UUID) ([][]byte, error) {
+func (m *queryManager) ExecuteBoundSessionQueryWithTimeout(query string, queryTimeout *time.Duration, bindings map[string]string, rebindings map[string]string, sessionId *uuid.UUID, customRequests map[string]string) ([][]byte, error) {
 	if m.dialer.IsDisposed() {
 		return nil, gremerror.ErrDisposedConnection
 	}
@@ -106,5 +107,5 @@ func (m *queryManager) ExecuteBoundSessionQueryWithTimeout(query string, queryTi
 	// log the command that will be executed.
 	m.logger.PrintQuery(query)
 
-	return m.executeRequest(query, queryTimeout, bindings, rebindings, sessionId)
+	return m.executeRequest(query, queryTimeout, bindings, rebindings, sessionId, customRequests)
 }
