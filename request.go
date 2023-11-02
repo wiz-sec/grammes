@@ -22,10 +22,11 @@ package grammes
 
 import (
 	"context"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/northwesternmutual/grammes/gremconnect"
 	"github.com/northwesternmutual/grammes/gremerror"
-	"time"
 )
 
 var (
@@ -38,7 +39,7 @@ const (
 	clientTimeoutGrace = 20 * time.Second
 )
 
-func (c *Client) executeRequest(query string, queryTimeout *time.Duration, bindings, rebindings map[string]string, sessionId *uuid.UUID) ([][]byte, error) {
+func (c *Client) executeRequest(query string, queryTimeout *time.Duration, bindings, rebindings map[string]string, sessionId *uuid.UUID, customRequests map[string]string) ([][]byte, error) {
 	resolvedQueryTimeout := c.requestTimeout
 
 	if queryTimeout != nil {
@@ -56,7 +57,7 @@ func (c *Client) executeRequest(query string, queryTimeout *time.Duration, bindi
 
 	// Construct a map containing the values along
 	// with a randomly generated id to fetch the response.
-	req, id, err := gremPrepareRequest(query, &resolvedQueryTimeout, bindings, rebindings, sessionId)
+	req, id, err := gremPrepareRequest(query, &resolvedQueryTimeout, bindings, rebindings, sessionId, customRequests)
 	if err != nil {
 		c.logger.Error("uuid generation when preparing request",
 			gremerror.NewGrammesError("executeRequest", err),
@@ -74,7 +75,7 @@ func (c *Client) executeRequest(query string, queryTimeout *time.Duration, bindi
 	}
 
 	c.resultMessenger.Store(id, make(chan int, 1))
-	c.dispatchRequest(msg)              // send the request.
+	c.dispatchRequest(msg)                                                       // send the request.
 	resp, err := c.retrieveResponse(id, resolvedQueryTimeout+clientTimeoutGrace) // retrieve the response from the gremlin server
 	if err != nil {
 		c.logger.Error("retrieving response",
