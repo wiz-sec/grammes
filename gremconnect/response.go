@@ -23,6 +23,7 @@ package gremconnect
 import (
 	"encoding/json"
 	"errors"
+
 	"github.com/northwesternmutual/grammes/gremerror"
 )
 
@@ -36,6 +37,14 @@ type Response struct {
 
 // patch for mocking test values
 var jsonUnmarshal = json.Unmarshal
+
+func SetJsonUnmarshal(f func(data []byte, v any) error) {
+	jsonUnmarshal = f
+}
+
+func ResetJsonUnmarshal() {
+	jsonUnmarshal = json.Unmarshal
+}
 
 // MarshalResponse creates a Response struct for
 // every incoming Response for further manipulation
