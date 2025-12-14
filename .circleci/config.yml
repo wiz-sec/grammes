@@ -15,6 +15,10 @@ workflows:
   version: 2
   build:
     jobs:
-      - test:
-          context:
-            - BuildContext
+      - test
+      # https://wiz-io.atlassian.net/browse/WZ-90164 
+      # I dont see any pipeline that run on this repo - its not configured in CircleCI
+      # last deploy was 3 years ago, In case future need arise - we can use BuildCtxNoDefaultAWS
+      # - test:
+      #     context:
+      #       - BuildContext
