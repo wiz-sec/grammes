@@ -236,3 +236,4 @@ If Nodetool times out or any other part of the setup times out then the most com
 # only for Unix at the moment.
 launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.cassandra.plist
 ```
+
